@@ -58,13 +58,31 @@ public class EmpDAO {
         return list;
     }
     // INSERT 구현
-    public void empInsert(EmpVO vo) {
+    public boolean empInsert(EmpVO vo) {
+        String sql = "INSERT INTO EMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO) VALUES (?,?,?,?,?,?,?,?)";
+        try{
+            conn = Common.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, vo.getEmpNO());
+            pstmt.setString(2, vo.getName());
+            pstmt.setString(3, vo.getJob());
+            pstmt.setInt(4, vo.getMgr());
+            pstmt.setDate(5, vo.getDate());
+            pstmt.setBigDecimal(6, vo.getSal());
+            pstmt.setBigDecimal(7, vo.getComm());
+            pstmt.setInt(8, vo.getDeptNO());
+            pstmt.executeUpdate(); // insert, update, delete 에 해당하는 함수
+            return true;
+
+        } catch(Exception e) {
+            System.out.println("INSERT 실패");
+            return false;
+        } finally {
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        }
     }
-
-
-
-
-
 
     public void empSelectResult(List<EmpVO> list) {
         System.out.println("----------------------------------------------");
@@ -83,7 +101,52 @@ public class EmpDAO {
         }
         System.out.println("----------------------------------------------");
     }
+    public void enoDelete() {
+        System.out.print("삭제 할 사원의 이름 입력:");
+        String name = sc.next();
+        String sql = "DELETE FROM EMP WHERE ENAME = ?";
 
+        try{
+            conn = Common.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("삭제에 실패했습니다.");
+        }finally {
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        }
+    }
+    public void empUpdate() {
+        System.out.print("변경 할 사원의 이름 입력: ");
+        String name = sc.next();
+        System.out.print("직책 : ");
+        String job = sc.next();
+        System.out.print("급여 : " );
+        int sal = sc.nextInt();
+        System.out.print("성과급 : " );
+        int comm = sc.nextInt();
+
+        String sql = "UPDATE EMP SET JOB = ?, SAL = ?, COMM = ? WHERE ENAME = ?";
+
+        try {
+            conn = Common.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, job);
+            pstmt.setInt(2, sal);
+            pstmt.setInt(3,  comm);
+            pstmt.setString(4, name);
+            pstmt.executeUpdate();
+        }catch (Exception e) {
+            System.out.print("변경에 실패하였습니다.");
+        }finally {
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        }
+    }
 }
 
 

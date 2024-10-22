@@ -25,8 +25,19 @@ public class JdbcMain {
                     dao.empSelectResult(list);
                     break;
                 case 2:
-                    empInput();
-
+                    boolean isSuccess = dao.empInsert(empInput());
+                    if(isSuccess) System.out.println("사원 등록에 성공했습니다");
+                    else System.out.println("사원 등록에 실패했습니다");
+                    break;
+                case 3:
+                    dao.empUpdate();
+                    break;
+                case 4:
+                    dao.enoDelete();
+                    break;
+                case 5:
+                    System.out.println("프로그램을 종료합니다.");
+                    return;
             }
         }
     }
